@@ -9,8 +9,8 @@ cv2.namedWindow("test")
 
 img_counter = 0
 
-# Set a threshold for the number of blue pixels required (100 in this case)
-blue_pixel_threshold = 100  # You can adjust this as needed
+# Threshold for the number of blue pixels required (100 in this case)
+blue_pixel_threshold = 100  # Adjust this as needed
 
 while True:
     # Capture frame from webcam
@@ -22,12 +22,12 @@ while True:
     # Convert the frame to HSV color space
     hsv = cv2.cvtColor(frame, cv2.COLOR_BGR2HSV)
 
-    # Define the range for blue color in HSV space
-    # You can adjust these values to better match the shade of blue you want to detect
+    # Range for blue color in HSV space
+    # You can adjust these values to better match the shade of blue
     lower_blue = np.array([100, 150, 50])
     upper_blue = np.array([140, 255, 255])
 
-    # Create a mask that captures areas in the frame that are blue
+    # Captures areas in the frame that are blue
     mask = cv2.inRange(hsv, lower_blue, upper_blue)
 
     # Count the number of blue pixels
