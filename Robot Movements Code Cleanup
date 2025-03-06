@@ -1,0 +1,111 @@
+import time
+import math
+import os
+import sys
+from utils.UR_Functions import URfunctions as URControl
+from robotiq.robotiq_gripper import RobotiqGripper
+
+# Robot position constants
+ROBOT_POSITIONS = {
+    "home": [1.9598, -1.8197, 2.0655, -0.2611, 1.9489, 3.1008],
+    "sample_vial": [1.8568, -1.0524, 2.2289, -1.1754, 1.8486, 3.1219],
+    "up_vertical": [1.8578, -1.4473, 2.1107, -0.6616, 1.8479, 3.1247],
+    "above_stirrer": [1.1681, -2.0112, 2.5829, -0.5724, 1.1568, 3.1245],
+    "in_stirrer": [1.1671, -1.7945, 2.6972, -0.9028, 1.1571, 3.1231],
+    "gripper_vertical": [1.4187, -1.2759, 1.2870, 1.5578, 1.5610, 2.9646],
+    "gripper_down": [1.4126, -1.2246, 1.5708, 1.2227, 1.5618, 2.9600],
+    "just_above_stirrer": [1.4119, -1.2327, 1.5361, 1.2655, 1.5617, 2.9592],
+    "in_front_of_white_bg": [0.9755, -1.2299, 1.5326, 1.2679, 1.5616, 2.5228],
+    "above_home_holder": [1.7151, -0.9303, 0.9488, 1.4103, 1.4994, 3.2781],
+    "returned_to_holder": [1.7155, -0.8444, 1.2255, 1.0474, 1.5007, 3.2800],
+}
+
+# Constants for movement
+MOVEMENT_PARAMS = {
+    "speed": 0.25,
+    "acceleration": 0.5,
+    "blending": 0.02,
+}
+
+def degreestorad(angles_deg):
+    """Convert a list of angles from degrees to radians."""
+    return [angle * (math.pi / 180) for angle in angles_deg]
+
+def move_robot(robot, position):
+    """Move robot to a specific joint position."""
+    robot.move_joint_list(position, MOVEMENT_PARAMS["speed"], MOVEMENT_PARAMS["acceleration"], MOVEMENT_PARAMS["blending"])
+
+def operate_gripper(gripper, position):
+    """Operate the gripper: 0 for open, 140 for picking up, 255 for fully closed."""
+    gripper.move(position, 125, 125)
+
+def main():
+    robot = URControl(ip="192.168.0.2", port=30003)
+    gripper = RobotiqGripper()
+    gripper.connect("192.168.0.2", 63352)
+
+    # Open gripper initially
+    operate_gripper(gripper, 0)  # Open the gripper
+    
+    # Perform robot movements and gripper actions
+    move_robot(robot, ROBOT_POSITIONS["home"])
+    print("Moved to home position")
+
+    time.sleep(1)
+    
+    # Sample handling process
+    operate_gripper(gripper, 0)  # Open gripper
+    move_robot(robot, ROBOT_POSITIONS["sample_vial"])
+    print("Moved to sample vial position")
+
+    operate_gripper(gripper, 140)  # Close the gripper to pick up the sample (gripper at 140)
+
+    time.sleep(1)
+    move_robot(robot, ROBOT_POSITIONS["up_vertical"])
+    print("Moved to up vertical position")
+
+    time.sleep(1)
+    move_robot(robot, ROBOT_POSITIONS["above_stirrer"])
+    operate_gripper(gripper, 0)  # Open gripper to release the sample
+    print("Moved to above stirrer position")
+
+    time.sleep(1)
+    move_robot(robot, ROBOT_POSITIONS["in_stirrer"])
+    print("Moved to in stirrer position")
+
+    time.sleep(1)
+    move_robot(robot, ROBOT_POSITIONS["above_stirrer"])
+    operate_gripper(gripper, 0)  # Open gripper to release sample
+    print("Moved back above stirrer")
+
+    time.sleep(1)
+    move_robot(robot, ROBOT_POSITIONS["gripper_vertical"])
+    print("Moved gripper vertically")
+
+    time.sleep(30)  # Stirring process (30 seconds)
+
+    move_robot(robot, ROBOT_POSITIONS["gripper_down"])
+    operate_gripper(gripper, 140)  # Close the gripper to pick up sample
+    print("Moved to gripper down position")
+
+    time.sleep(1)
+    move_robot(robot, ROBOT_POSITIONS["just_above_stirrer"])
+    print("Moved just above stirrer")
+
+    time.sleep(1)
+    move_robot(robot, ROBOT_POSITIONS["in_front_of_white_bg"])
+    print("Moved to white background")
+
+    time.sleep(1)
+    move_robot(robot, ROBOT_POSITIONS["above_home_holder"])
+    print("Moved above home holder")
+
+    time.sleep(1)
+    move_robot(robot, ROBOT_POSITIONS["returned_to_holder"])
+    print("Moved to returned holder position")
+
+    # Open the gripper after completion
+    operate_gripper(gripper, 0)  # Open the gripper to finish
+
+if __name__ == "__main__":
+    main()
