@@ -26,6 +26,9 @@ below_threshold_counter = 0
 reaction_started = False
 reaction_ended = False
 
+# Define Region of Interest (ROI) for detection (x, y, width, height)
+roi_x, roi_y, roi_w, roi_h = 200, 150, 400, 300  # Adjust these values based on your camera setup
+
 # Open a CSV file to save the results
 with open('blue_pixel_data.csv', mode='w', newline='') as file:
     writer = csv.writer(file)
@@ -40,8 +43,11 @@ with open('blue_pixel_data.csv', mode='w', newline='') as file:
             print("Failed to grab frame")
             break
 
-        # Convert the frame to HSV color space
-        hsv = cv2.cvtColor(frame, cv2.COLOR_BGR2HSV)
+        # Crop the frame to the ROI
+        roi_frame = frame[roi_y:roi_y+roi_h, roi_x:roi_x+roi_w]
+
+        # Convert the cropped frame to HSV color space
+        hsv = cv2.cvtColor(roi_frame, cv2.COLOR_BGR2HSV)
 
         # Range for blue color in HSV space
         lower_blue = np.array([100, 150, 50])
@@ -50,7 +56,7 @@ with open('blue_pixel_data.csv', mode='w', newline='') as file:
         # Captures areas in the frame that are blue
         mask = cv2.inRange(hsv, lower_blue, upper_blue)
 
-        # Count the number of blue pixels
+        # Count the number of blue pixels in the ROI
         blue_pixel_count = np.count_nonzero(mask)
         
         # Track time
@@ -77,7 +83,8 @@ with open('blue_pixel_data.csv', mode='w', newline='') as file:
         # Write the data to the CSV file
         writer.writerow([elapsed_seconds, blue_pixel_count])
 
-        # Display the original frame and the mask (to visualize the blue detection)
+        # Display the original frame, ROI frame, and the mask (to visualize the blue detection)
+        cv2.rectangle(frame, (roi_x, roi_y), (roi_x + roi_w, roi_y + roi_h), (0, 255, 0), 2)  # Draw ROI rectangle
         cv2.imshow("test", frame)
         cv2.imshow("Blue Mask", mask)  # Display the blue pixel mask
 
