@@ -7,18 +7,19 @@ from robotiq.robotiq_gripper import RobotiqGripper
 
 # Robot position constants
 ROBOT_POSITIONS = {
-    "home": [1.9598, -1.8197, 2.0655, -0.2611, 1.9489, 3.1008],
-    "sample_vial": [1.8568, -1.0524, 2.2289, -1.1754, 1.8486, 3.1219],
-    "up_vertical": [1.8578, -1.4473, 2.1107, -0.6616, 1.8479, 3.1247],
-    "above_stirrer": [1.1681, -2.0112, 2.5829, -0.5724, 1.1568, 3.1245],
-    "in_stirrer": [1.1671, -1.7945, 2.6972, -0.9028, 1.1571, 3.1231],
-    "gripper_vertical": [1.4187, -1.2759, 1.2870, 1.5578, 1.5610, 2.9646],
-    "gripper_down": [1.4126, -1.2246, 1.5708, 1.2227, 1.5618, 2.9600],
-    "just_above_stirrer": [1.4119, -1.2327, 1.5361, 1.2655, 1.5617, 2.9592],
-    "in_front_of_white_bg": [0.9755, -1.2299, 1.5326, 1.2679, 1.5616, 2.5228],
-    "above_home_holder": [1.7151, -0.9303, 0.9488, 1.4103, 1.4994, 3.2781],
-    "returned_to_holder": [1.7155, -0.8444, 1.2255, 1.0474, 1.5007, 3.2800],
-}
+    "home": [1.9598381519317627, -1.8197394810118617, 2.0655067602740687, -0.2610810560039063, 1.9489684104919434, 3.1007790565490723],
+    "sample_vial": [1.8568476438522339, -1.0523559612086792, 2.228867832814352, -1.175378904943802, 1.8485941886901855, 3.121866464614868],
+    "up_vertical": [1.8578236103057861, -1.447265812461712, 2.110725227986471, -0.6615637105754395, 1.847927212715149, 3.124692440032959],
+    "above_stirrer": [1.1681103706359863, -2.01121248821401, 2.5829289595233362, -0.5724046987346192, 1.1567866802215576, 3.1245429515838623],
+    "in_stirrer": [1.1671242713928223, -1.794520994225973, 2.697186533604757, -0.9027928870967408, 1.1570861339569092, 3.123086452484131],
+    "gripper_vertical": [1.418738842010498, -1.2759456199458619, 1.2870314756976526, 1.557830734843872, 1.5609979629516602, 2.964608669281006],
+    "gripper_down": [1.412574291229248, -1.2245715421489258, 1.5707538763629358, 1.2227379518696289, 1.5618265867233276, 2.960045576095581],
+    "just_above_stirrer": [1.4119385480880737, -1.232708917265274, 1.5361388365374964, 1.2655228811451416, 1.5617036819458008, 2.9591991901397705],
+    "in_front_of_white_bg": [0.9755352735519409, -1.2298626464656373, 1.5326388517962855, 1.2679366308399658, 1.5615804195404053, 2.5227737426757812],
+    "above_home_holder": [1.7151169776916504, -0.9303394120982666, 0.9488051573382776, 1.4103073316761474, 1.499406337738037, 3.27805757522583],
+    "readjustment": [1.7267637252807617, -0.8310088676265259, 0.8723586241351526, 1.5185677248188476, 1.5266249179840088, 3.2738213539123535],
+    "return_to_holder": [1.7270193099975586, -0.7678989332965394, 1.0835111776935022, 1.2442163664051513, 1.527403473854065, 3.275404453277588]
+    }
 
 # Constants for movement
 MOVEMENT_PARAMS = {
@@ -66,23 +67,22 @@ def main():
 
     time.sleep(1)
     move_robot(robot, ROBOT_POSITIONS["above_stirrer"])
-    operate_gripper(gripper, 0)  # Open gripper to release the sample
     print("Moved to above stirrer position")
 
     time.sleep(1)
     move_robot(robot, ROBOT_POSITIONS["in_stirrer"])
+    operate_gripper(gripper, 0)  # Open gripper to release the sample
     print("Moved to in stirrer position")
 
     time.sleep(1)
     move_robot(robot, ROBOT_POSITIONS["above_stirrer"])
-    operate_gripper(gripper, 0)  # Open gripper to release sample
     print("Moved back above stirrer")
 
     time.sleep(1)
     move_robot(robot, ROBOT_POSITIONS["gripper_vertical"])
     print("Moved gripper vertically")
 
-    time.sleep(30)  # Stirring process (30 seconds)
+    time.sleep(1)  # Stirring process (30 seconds) update this please when it comes to it
 
     move_robot(robot, ROBOT_POSITIONS["gripper_down"])
     operate_gripper(gripper, 140)  # Close the gripper to pick up sample
@@ -101,8 +101,12 @@ def main():
     print("Moved above home holder")
 
     time.sleep(1)
-    move_robot(robot, ROBOT_POSITIONS["returned_to_holder"])
-    print("Moved to returned holder position")
+    move_robot(robot, ROBOT_POSITIONS["readjustment"])
+    print("readjustment")
+    
+    time.sleep(1)
+    move_robot(robot, ROBOT_POSITIONS["return_to_holder"])
+    print("Moved to return holder position")
 
     # Open the gripper after completion
     operate_gripper(gripper, 0)  # Open the gripper to finish
