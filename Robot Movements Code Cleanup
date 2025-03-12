@@ -82,7 +82,7 @@ def main():
     move_robot(robot, ROBOT_POSITIONS["gripper_vertical"])
     print("Moved gripper vertically")
 
-    time.sleep(1)  # Stirring process (30 seconds) update this please when it comes to it
+    time.sleep(30)  # Stirring process (30 seconds) update this please when it comes to it
 
     move_robot(robot, ROBOT_POSITIONS["gripper_down"])
     operate_gripper(gripper, 140)  # Close the gripper to pick up sample
@@ -95,8 +95,8 @@ def main():
     time.sleep(1)
     move_robot(robot, ROBOT_POSITIONS["in_front_of_white_bg"])
     print("Moved to white background")
-
-    time.sleep(1)
+    
+    time.sleep(64)
     move_robot(robot, ROBOT_POSITIONS["above_home_holder"])
     print("Moved above home holder")
 
