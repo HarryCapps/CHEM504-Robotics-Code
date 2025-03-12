@@ -46,7 +46,6 @@ with open('blue_pixel_data.csv', mode='w', newline='') as file:
         # Crop the frame to the ROI
         roi_frame = frame[roi_y:roi_y+roi_h, roi_x:roi_x+roi_w]
 
-        # Convert the frame to RGB (no conversion needed as we are already working with RGB)
         # Check blue channel: For blue detection, blue channel should be high and red/green low
         blue_channel = roi_frame[:, :, 0]  # Blue channel (OpenCV uses BGR by default)
         green_channel = roi_frame[:, :, 1]  # Green channel
