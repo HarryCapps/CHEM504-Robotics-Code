@@ -2,6 +2,7 @@ import cv2
 import numpy as np
 import time
 import csv
+import os
 
 # Initialize webcam
 cam = cv2.VideoCapture(0)
@@ -9,35 +10,35 @@ cam = cv2.VideoCapture(0)
 # Create a window to display the feed
 cv2.namedWindow("test")
 
-img_counter = 0
-
 # Thresholds
-blue_pixel_threshold = 100  # Number of blue pixels to trigger detection
-reaction_threshold = 500  # Threshold for "Sample vial is blue"
-blue_pixel_below_threshold_duration = 5  # Number of consecutive seconds below threshold to print "reaction is no longer blue"
-time_limit = 60  # Time limit for 60 seconds
+blue_pixel_threshold = 100  # Minimum number of blue pixels to detect reaction
+reaction_threshold = 500  # Total required blue pixels over time
+blue_pixel_below_threshold_duration = 5  # Time for "reaction is no longer blue"
+time_limit = 60  # Run for 60 seconds
 
-# To track the time and blue pixels
+# Track blue pixel count over time
 blue_pixel_counts = []
 times = []
 
-# Keep track of the blue reaction duration
-below_threshold_counter = 0
-reaction_started = False
-reaction_ended = False
+# Define Region of Interest (ROI)
+roi_x, roi_y, roi_w, roi_h = 200, 150, 260, 280  
 
-# Define Region of Interest (ROI) for detection (x, y, width, height)
-roi_x, roi_y, roi_w, roi_h = 200, 150, 400, 300  # Adjust these values based on your camera setup
+# CSV file path
+csv_file_path = os.path.expanduser("~/Code/chem504-2425_GroupA/examples/blue_pixel_data.csv")
 
-# Open a CSV file to save the results
-with open('blue_pixel_data.csv', mode='w', newline='') as file:
-    writer = csv.writer(file)
-    writer.writerow(["Time (Seconds)", "Blue Pixel Count"])
+# Track time
+start_time = time.time()
+last_logged_time = -1  # Ensures first log at t=0
 
-    start_time = time.time()
-
+try:
     while True:
-        # Capture frame from webcam
+        # Check if ESC key is pressed
+        k = cv2.waitKey(1) & 0xFF
+        if k == 27:  # ESC key
+            print("Escape hit, closing...")
+            break
+
+        # Capture frame
         ret, frame = cam.read()
         if not ret:
             print("Failed to grab frame")
@@ -46,62 +47,60 @@ with open('blue_pixel_data.csv', mode='w', newline='') as file:
         # Crop the frame to the ROI
         roi_frame = frame[roi_y:roi_y+roi_h, roi_x:roi_x+roi_w]
 
-        # Check blue channel: For blue detection, blue channel should be high and red/green low
-        blue_channel = roi_frame[:, :, 0]  # Blue channel (OpenCV uses BGR by default)
-        green_channel = roi_frame[:, :, 1]  # Green channel
-        red_channel = roi_frame[:, :, 2]  # Red channel
+        # Extract color channels
+        blue_channel = roi_frame[:, :, 0]
+        green_channel = roi_frame[:, :, 1]
+        red_channel = roi_frame[:, :, 2]
 
-        # Define thresholds for blue detection (you can fine-tune these values)
+        # Define blue mask
         blue_mask = (blue_channel > 150) & (green_channel < 100) & (red_channel < 100)
 
-        # Count the number of blue pixels in the ROI
+        # Count blue pixels
         blue_pixel_count = np.count_nonzero(blue_mask)
-        
-        # Track time
-        elapsed_time = time.time() - start_time
-        elapsed_seconds = int(elapsed_time)
-        
-        # If the blue pixel count is above the threshold, we consider it "blue"
-        if blue_pixel_count >= blue_pixel_threshold:
-            below_threshold_counter = 0  # Reset the counter if blue pixels are detected
-            if not reaction_started:
-                print("Sample vial is blue")
-                reaction_started = True
-        else:
-            # If blue pixel count is below the threshold, we count how many seconds it stays low
-            below_threshold_counter += 1
-            if below_threshold_counter >= blue_pixel_below_threshold_duration and not reaction_ended:
-                print("The reaction is no longer blue")
-                reaction_ended = True
 
-        # Append the data for this second
-        blue_pixel_counts.append(blue_pixel_count)
-        times.append(elapsed_seconds)
+        # Track elapsed seconds
+        elapsed_seconds = int(time.time() - start_time)
 
-        # Write the data to the CSV file
-        writer.writerow([elapsed_seconds, blue_pixel_count])
+        # Only log data once per second
+        if elapsed_seconds > last_logged_time:
+            last_logged_time = elapsed_seconds  # Update last log time
+            blue_pixel_counts.append((elapsed_seconds, blue_pixel_count))
 
-        # Display the original frame, ROI frame, and the mask (to visualize the blue detection)
-        cv2.rectangle(frame, (roi_x, roi_y), (roi_x + roi_w, roi_y + roi_h), (0, 255, 0), 2)  # Draw ROI rectangle
+            # Print progress for debugging
+            print(f"Time: {elapsed_seconds}s, Blue Pixels: {blue_pixel_count}")
+
+        # Draw ROI on frame
+        cv2.rectangle(frame, (roi_x, roi_y), (roi_x + roi_w, roi_y + roi_h), (0, 255, 0), 2)
         cv2.imshow("test", frame)
-        cv2.imshow("Blue Mask", blue_mask.astype(np.uint8) * 255)  # Display the blue pixel mask (converted to 255 for visibility)
 
-        # Stop the loop after 60 seconds
+        # Convert mask to displayable format
+        blue_mask_display = cv2.merge([blue_mask.astype(np.uint8) * 255] * 3)
+        cv2.imshow("Blue Mask", blue_mask_display)
+
+        # Stop after 60 seconds
         if elapsed_seconds >= time_limit:
             break
 
-        k = cv2.waitKey(1)
-        if k % 256 == 27:
-            # ESC pressed
-            print("Escape hit, closing...")
-            break
+except Exception as e:
+    print(f"Error occurred: {e}")
 
-    # After 60 seconds, stop the webcam and close the windows
+finally:
+    # Release webcam
     cam.release()
     cv2.destroyAllWindows()
 
-    # Check if enough blue was present throughout the 60 seconds
-    if sum(blue_pixel_counts) >= reaction_threshold:
+    # Save CSV file
+    try:
+        with open(csv_file_path, mode='w', newline='') as file:
+            writer = csv.writer(file)
+            writer.writerow(["Time (Seconds)", "Blue Pixel Count"])
+            writer.writerows(blue_pixel_counts)
+        print(f"Data successfully saved in: {csv_file_path}")
+    except Exception as e:
+        print(f"Error while saving CSV file: {e}")
+
+    # Check if enough blue was detected
+    if sum(count for _, count in blue_pixel_counts) >= reaction_threshold:
         print("Sample vial is blue")
     else:
         print("Sample vial did not reach the blue threshold")
