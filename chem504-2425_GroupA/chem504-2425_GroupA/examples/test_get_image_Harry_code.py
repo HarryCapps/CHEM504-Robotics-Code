@@ -46,18 +46,17 @@ with open('blue_pixel_data.csv', mode='w', newline='') as file:
         # Crop the frame to the ROI
         roi_frame = frame[roi_y:roi_y+roi_h, roi_x:roi_x+roi_w]
 
-        # Convert the cropped frame to HSV color space
-        hsv = cv2.cvtColor(roi_frame, cv2.COLOR_BGR2HSV)
+        # Convert the frame to RGB (no conversion needed as we are already working with RGB)
+        # Check blue channel: For blue detection, blue channel should be high and red/green low
+        blue_channel = roi_frame[:, :, 0]  # Blue channel (OpenCV uses BGR by default)
+        green_channel = roi_frame[:, :, 1]  # Green channel
+        red_channel = roi_frame[:, :, 2]  # Red channel
 
-        # Range for blue color in HSV space
-        lower_blue = np.array([100, 150, 50])
-        upper_blue = np.array([140, 255, 255])
-
-        # Captures areas in the frame that are blue
-        mask = cv2.inRange(hsv, lower_blue, upper_blue)
+        # Define thresholds for blue detection (you can fine-tune these values)
+        blue_mask = (blue_channel > 150) & (green_channel < 100) & (red_channel < 100)
 
         # Count the number of blue pixels in the ROI
-        blue_pixel_count = np.count_nonzero(mask)
+        blue_pixel_count = np.count_nonzero(blue_mask)
         
         # Track time
         elapsed_time = time.time() - start_time
@@ -86,7 +85,7 @@ with open('blue_pixel_data.csv', mode='w', newline='') as file:
         # Display the original frame, ROI frame, and the mask (to visualize the blue detection)
         cv2.rectangle(frame, (roi_x, roi_y), (roi_x + roi_w, roi_y + roi_h), (0, 255, 0), 2)  # Draw ROI rectangle
         cv2.imshow("test", frame)
-        cv2.imshow("Blue Mask", mask)  # Display the blue pixel mask
+        cv2.imshow("Blue Mask", blue_mask.astype(np.uint8) * 255)  # Display the blue pixel mask (converted to 255 for visibility)
 
         # Stop the loop after 60 seconds
         if elapsed_seconds >= time_limit:
