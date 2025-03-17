@@ -13,16 +13,34 @@ The Blue Bottle Experiment demonstrates the reversible oxidation and reduction o
 
 ![image](https://github.com/user-attachments/assets/f0d46fd7-f9c2-44cb-8bfc-536ab88977f2)
 
-
-
 ## Prerequisites
 
+The following software is required to run the code and acquire the appropriate data:
+
+- Visual Studio Code (or other code editor) - https://code.visualstudio.com/download
+- Arduino IDE - https://www.arduino.cc/en/software
+- Python (Anaconda is recommended. To install, click "Free Download using the URL") - https://www.anaconda.com/
+
+The following pieces of equipment are also required:
+
+- UR5e
+- HD Web camera
+- Hotplate stirrer
+- Sample vial(s)
+- 20 mm magnetic stirrer bar(s)
+- White background
 
 ## Installation
 
 
 ## Usage
 
+Below is a set of instructions for collecting data using the hardware listed before and the code provided.
+1. Turn on the UR5e robotic arm.
+2. Connect the HD Web camera to your computer.
+3. Place your sample vials in the home position(s), each containing a 20 mm magnetic stirrer bar.
+4. Position your camera in front of a white background where the robot will hold the sample vials for a given length of time.
+5. Run the Robotic Movements Code.
 
 ## Authors
 If you have any questions or would like additional information, please contact:
