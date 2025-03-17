@@ -3,6 +3,16 @@ This GitHub repository contains the code used in a research project for CHEM504 
 
 ## Description
 
+### Project Overview
+
+This project involves automating the Blue Bottle Experiment using a UR5e robotic arm and computer vision. Working in groups, a system to perform the experiment autonomously, detect colour changes, and potentially analyse the reaction kinetics will be designed. Subject to chemical availability, phenosafranine, indigo carmine, and resazurin may also be considered.
+
+### The Blue Bottle Experiment
+
+The Blue Bottle Experiment demonstrates the reversible oxidation and reduction of methylene blue. When shaken, the solution mixes with oxygen, oxidising methylene blue to its blue form. Over time, the dissolved oxygen is consumed by glucose in the reaction, and methylene blue is reduced to its colourless form.
+
+![image](https://github.com/user-attachments/assets/4b5d088f-e93f-4f88-9175-221ba0427532)
+
 
 ## Prerequisites
 
