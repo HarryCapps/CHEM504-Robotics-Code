@@ -11,6 +11,26 @@ import time
 import csv
 import os
 
+import pandas as pd
+import numpy as np
+import matplotlib.pyplot as plt
+from scipy.optimize import curve_fit
+import os
+
+
+# class RobotClass:
+#     def __init__(self,args):
+#         self.ROBOT_POSITIONS = ...
+#         self._angle_deg : int = 100
+#         self.args = args
+#         self.rads = self.degreestorad(self, self._angle_deg)
+        
+#     def degreestorads(self, angle):
+#         print(f"hi {angle}")
+#         return 10
+    
+# robot = RobotClass(10)
+
 # Robot position constants
 ROBOT_POSITIONS = {
     "home": [1.9598381519317627, -1.8197394810118617, 2.0655067602740687, -0.2610810560039063, 1.9489684104919434, 3.1007790565490723],
@@ -33,6 +53,11 @@ MOVEMENT_PARAMS = {
     "acceleration": 0.5,
     "blending": 0.02,
 }
+
+CSV_FILE_PATH = os.path.expanduser("~/Code/chem504-2425_GroupA/examples/blue_pixel_data.csv")
+
+
+
 
 def degreestorad(angles_deg):
     """Convert a list of angles from degrees to radians."""
@@ -88,7 +113,7 @@ def main():
     move_robot(robot, ROBOT_POSITIONS["gripper_vertical"])
     print("Moved gripper vertically")
 
-    time.sleep(30)  # Stirring process (30 seconds) update this please when it comes to it
+    time.sleep(1)  # Stirring process (30 seconds) update this please when it comes to it
 
     move_robot(robot, ROBOT_POSITIONS["gripper_down"])
     operate_gripper(gripper, 140)  # Close the gripper to pick up sample
@@ -109,8 +134,8 @@ def main():
     cv2.namedWindow("test")
 
     # Thresholds
-    blue_pixel_threshold = 100  # Minimum blue pixels required to consider it "blue"
-    reaction_threshold = 500  # Total required blue pixels for successful detection
+    blue_pixel_threshold = 0  # Minimum blue pixels required to consider it "blue"
+    reaction_threshold = 50  # Total required blue pixels for successful detection
     blue_pixel_below_threshold_duration = 5  # Number of seconds below threshold before stopping
 
     # Track blue pixel count over time
@@ -120,13 +145,10 @@ def main():
     # Define Region of Interest (ROI)
     roi_x, roi_y, roi_w, roi_h = 200, 150, 260, 280  
 
-    # CSV file path
-    csv_file_path = os.path.expanduser("~/Code/chem504-2425_GroupA/examples/blue_pixel_data.csv")
-
     # Track time
     start_time = time.time()
     last_logged_time = -1
-    below_threshold_counter = 0  # Track how long the reaction is not blue
+    below_threshold_counter = 3  # Track how long the reaction is not blue
 
     try:
         while True:
@@ -195,11 +217,11 @@ def main():
 
         # Save CSV file
         try:
-            with open(csv_file_path, mode='w', newline='') as file:
+            with open(CSV_FILE_PATH, mode='w', newline='') as file:
                 writer = csv.writer(file)
                 writer.writerow(["Time (Seconds)", "Blue Pixel Count"])
                 writer.writerows(blue_pixel_counts)
-            print(f"Data successfully saved in: {csv_file_path}")
+            print(f"Data successfully saved in: {CSV_FILE_PATH}")
         except Exception as e:
             print(f"Error while saving CSV file: {e}")
 
@@ -223,6 +245,48 @@ def main():
 
     # Open the gripper after completion
     operate_gripper(gripper, 0)  # Open the gripper to finish
+    
+def calculate_absorbance(blue_pixel_count):
+    """
+    Calculate absorbance based on the initial blue intensity and the current intensity.
+
+    Parameters:
+    blue_pixel_counts (list): A list of tuples where each tuple contains (time, blue_pixel_count).
+
+    Returns:
+    absorbance_values (list): A list of tuples with (time, blue_pixel_count, absorbance).
+    """
+    absorbance_values = []
+    initial_intensity = None
+
+    for time, current_intensity in blue_pixel_count:
+        if initial_intensity is None and current_intensity > 0:
+            initial_intensity = current_intensity  # First non-zero intensity
+
+        if initial_intensity is not None:
+            absorbance = current_intensity / initial_intensity
+        else:
+            absorbance = 0  # Default to zero if no valid initial intensity is found
+
+        absorbance_values.append((time, current_intensity, absorbance))
+        print(f"Time: {time}s, Blue Intensity: {current_intensity}, Absorbance: {absorbance:.4f}")
+
+    return absorbance_values
+
+# # Save CSV file with absorbance data
+# try:
+#     with open(CSV_FILE_PATH, mode='w', newline='') as file:
+#         writer = csv.writer(file)
+#         writer.writerow(["Time (Seconds)", "Blue Pixel Count", "Absorbance"])
+#         writer.writerows(absorbance_data)
+#     print(f"Data successfully saved in: {CSV_FILE_PATH}")
+# except Exception as e:
+#     print(f"Error while saving CSV file: {e}")
 
 if __name__ == "__main__":
     main()
+
+
+
+
+
