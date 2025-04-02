@@ -1,3 +1,5 @@
+# kinetics.py
+
 import pandas as pd
 import numpy as np
 import matplotlib.pyplot as plt
@@ -17,25 +19,30 @@ def process_and_plot_absorbance(csv_path: str, reference_time: float = 3.0, show
     Returns:
         pd.DataFrame: DataFrame with added columns for Absorbance, Adjusted Time, and ln(Absorbance).
     """
+    # Expand user path and read the CSV file
     csv_path = os.path.expanduser(csv_path)
     df = pd.read_csv(csv_path)
+    
+    # Ensure the columns are clean by stripping any surrounding spaces
     df.columns = df.columns.str.strip()
 
+    # Find the reference blue pixel count at the specified reference time
     ref_values = df.loc[df['Time (seconds)'] == reference_time, 'Blue Pixel Count'].values
     if len(ref_values) == 0:
         raise ValueError(f"No data found for Time = {reference_time} seconds.")
     ref_value = ref_values[0]
 
+    # Calculate Absorbance, Adjusted Time, and ln(Absorbance)
     df['Absorbance'] = df['Blue Pixel Count'] / ref_value
     df['Adjusted Time (seconds)'] = df['Time (seconds)'] - reference_time
     df['ln(Absorbance)'] = np.log(df['Absorbance'])
 
-    # Linear regression on ln(absorbance) vs adjusted time
+    # Perform linear regression on ln(Absorbance) vs Adjusted Time
     x = df['Adjusted Time (seconds)']
     y = df['ln(Absorbance)']
     slope, intercept, r_value, p_value, std_err = linregress(x, y)
 
-    # Plot
+    # Plot the data and the fitted line
     if show_plot:
         plt.figure(figsize=(8, 5))
         plt.plot(x, y, 'o', label='Data')
@@ -48,4 +55,5 @@ def process_and_plot_absorbance(csv_path: str, reference_time: float = 3.0, show
         plt.tight_layout()
         plt.show()
 
+    # Return the processed DataFrame
     return df
