@@ -17,7 +17,17 @@ The Blue Bottle Experiment demonstrates the reversible oxidation and reduction o
 
 The resazurin test demonstrates the reversible oxidation and reduction of the redox indicator resazurin. In its oxidised form, resazurin is blue. In its reduced form, resofurin is pink. This reaction has applications in the alamarBlue™ assay, which is a cell viability assay that measures cell proliferation and cytotoxicity using the metabolic activity of living cells, converting resazurin to resorufin.
 
+![image](https://github.com/user-attachments/assets/29d70cac-7c86-445c-af21-293f21e1efc4)
+
 Adapted by Uzarski _et al._ (J. S. Uzarski, M. D. DiVito, J. A. Wertheim, W. M. Miller, _Biomaterials_, 2017, **129**, 163-175).
+
+### "Chemical Traffic Light" Experiment
+
+The "Chemical Traffic Light" experiment is a redox reaction that demonstrates colour changes based on oxidation states. A solution containing indigo carmine, glucose (a reducing agent), and sodium hydroxide or potassium hydroxide in water changes colour when shaken and left to rest. When oxygen is introduced by shaking, indigo carmine is oxidised, turning the solution red. As the oxygen is consumed, it transitions through yellow (partially reduced) to green (fully reduced) when left undisturbed. This reversible cycle, driven by oxidation from air and reduction by glucose, mimics a traffic light sequence and illustrates redox chemistry and reaction kinetics.
+
+![image](https://github.com/user-attachments/assets/f2aa221a-4378-4d13-a24b-a467d02ccecd)
+
+S. C. Habibi, B. K. Bloom, A. E. Sjoblom, O. W. Schmitz, A. Edwards, Z. R. Croasmun-Adams, R. J. DeLuca, J. S. Smith, K. L. Kuntz, _J. Chem. Edu._, 2024, **101**, 2505-2512.
 
 ## Prerequisites
 
