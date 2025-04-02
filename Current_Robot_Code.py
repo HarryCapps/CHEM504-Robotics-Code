@@ -257,47 +257,15 @@ def main():
 
     # Open the gripper after completion
     operate_gripper(gripper, 0)  # Open the gripper to finish
-    
- 
-def calculate_absorbance(blue_pixel_count):
-    """
-    Calculate absorbance based on the initial blue intensity and the current intensity.
 
-    Parameters:
-    blue_pixel_counts (list): A list of tuples where each tuple contains (time, blue_pixel_count).
 
-    Returns:
-    absorbance_values (list): A list of tuples with (time, blue_pixel_count, absorbance).
-    """
-    absorbance_values = []
-    initial_intensity = None
+# Call the function with the file path and other parameters
+df_result = process_and_plot_absorbance(CSV_FILE_PATH, reference_time=3.0, show_plot=True)
 
-    for time, current_intensity in blue_pixel_count:
-        if initial_intensity is None and current_intensity > 0:
-            initial_intensity = current_intensity  # First non-zero intensity
+# print the resulting DataFrame to see the processed data
+print(df_result)
 
-        if initial_intensity is not None:
-            absorbance = current_intensity / initial_intensity
-        else:
-            absorbance = 0  # Default to zero if no valid initial intensity is found
 
-        absorbance_values.append((time, current_intensity, absorbance))
-        print(f"Time: {time}s, Blue Intensity: {current_intensity}, Absorbance: {absorbance:.4f}")
-
-    return absorbance_values
-
-#calls on this function to calculate the kinetics          
-process_and_plot_absorbance
-
-# # Save CSV file with absorbance data
-# try:
-#     with open(CSV_FILE_PATH, mode='w', newline='') as file:
-#         writer = csv.writer(file)
-#         writer.writerow(["Time (Seconds)", "Blue Pixel Count", "Absorbance"])
-#         writer.writerows(absorbance_data)
-#     print(f"Data successfully saved in: {CSV_FILE_PATH}")
-# except Exception as e:
-#     print(f"Error while saving CSV file: {e}")
 
 if __name__ == "__main__":
     main()
