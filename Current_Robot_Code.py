@@ -57,8 +57,6 @@ MOVEMENT_PARAMS = {
 CSV_FILE_PATH = os.path.expanduser("~/Code/chem504-2425_GroupA/examples/blue_pixel_data.csv")
 
 
-
-
 def degreestorad(angles_deg):
     """Convert a list of angles from degrees to radians."""
     return [angle * (math.pi / 180) for angle in angles_deg]
@@ -108,12 +106,7 @@ def main():
     time.sleep(1)
     move_robot(robot, ROBOT_POSITIONS["above_stirrer"])
     print("Moved back above stirrer")
-
-    time.sleep(1)
-    move_robot(robot, ROBOT_POSITIONS["gripper_vertical"])
-    print("Moved gripper vertically")
-
-    time.sleep(1)  # Stirring process (30 seconds) update this please when it comes to it
+  # Stirring process (30 seconds) update this please when it comes to it
 
     move_robot(robot, ROBOT_POSITIONS["gripper_down"])
     operate_gripper(gripper, 140)  # Close the gripper to pick up sample
@@ -127,20 +120,18 @@ def main():
     move_robot(robot, ROBOT_POSITIONS["in_front_of_white_bg"])
     print("Moved to white background")
 
-    # Initialize webcam
+    #starts video capture
     cam = cv2.VideoCapture(0)
 
-    # Create a window to display the feed
     cv2.namedWindow("test")
+    cv2.namedWindow("Blue Mask")
 
     # Thresholds
-    blue_pixel_threshold = 0  # Minimum blue pixels required to consider it "blue"
     reaction_threshold = 50  # Total required blue pixels for successful detection
-    blue_pixel_below_threshold_duration = 5  # Number of seconds below threshold before stopping
+    blue_pixel_below_threshold_duration = 5  # Seconds below threshold before stopping
 
     # Track blue pixel count over time
     blue_pixel_counts = []
-    times = []
 
     # Define Region of Interest (ROI)
     roi_x, roi_y, roi_w, roi_h = 200, 150, 260, 280  
@@ -148,74 +139,93 @@ def main():
     # Track time
     start_time = time.time()
     last_logged_time = -1
-    below_threshold_counter = 3  # Track how long the reaction is not blue
+    below_threshold_counter = 3
+
+    # Optional: for dynamic threshold tuning
+    def nothing(x): pass
+    cv2.createTrackbar("Lower Hue", "Blue Mask", 100, 179, nothing)
+    cv2.createTrackbar("Upper Hue", "Blue Mask", 130, 179, nothing)
+    cv2.createTrackbar("Lower Sat", "Blue Mask", 150, 255, nothing)
+    cv2.createTrackbar("Upper Sat", "Blue Mask", 255, 255, nothing)
+    cv2.createTrackbar("Lower Val", "Blue Mask", 50, 255, nothing)
+    cv2.createTrackbar("Upper Val", "Blue Mask", 255, 255, nothing)
+
+    CSV_FILE_PATH = "blue_pixel_data.csv"
 
     try:
         while True:
-            # Check if ESC key is pressed
             k = cv2.waitKey(1) & 0xFF
             if k == 27:  # ESC key
                 print("Escape hit, closing...")
                 break
 
-            # Capture frame
             ret, frame = cam.read()
             if not ret:
                 print("Failed to grab frame")
                 break
 
-            # Crop the frame to the ROI
+            # Crop ROI and apply Gaussian blur
             roi_frame = frame[roi_y:roi_y+roi_h, roi_x:roi_x+roi_w]
+            roi_frame = cv2.GaussianBlur(roi_frame, (5, 5), 0)
 
-            # Extract color channels
-            blue_channel = roi_frame[:, :, 0]
-            green_channel = roi_frame[:, :, 1]
-            red_channel = roi_frame[:, :, 2]
+            # Convert to HSV
+            hsv_roi = cv2.cvtColor(roi_frame, cv2.COLOR_BGR2HSV)
 
-            # Define blue mask
-            blue_mask = (blue_channel > 150) & (green_channel < 100) & (red_channel < 100)
+            # Get current HSV threshold values from trackbars
+            lower_h = cv2.getTrackbarPos("Lower Hue", "Blue Mask")
+            upper_h = cv2.getTrackbarPos("Upper Hue", "Blue Mask")
+            lower_s = cv2.getTrackbarPos("Lower Sat", "Blue Mask")
+            upper_s = cv2.getTrackbarPos("Upper Sat", "Blue Mask")
+            lower_v = cv2.getTrackbarPos("Lower Val", "Blue Mask")
+            upper_v = cv2.getTrackbarPos("Upper Val", "Blue Mask")
+
+            lower_blue = np.array([lower_h, lower_s, lower_v])
+            upper_blue = np.array([upper_h, upper_s, upper_v])
+
+            # Create blue mask
+            blue_mask = cv2.inRange(hsv_roi, lower_blue, upper_blue)
+
+            # Morphological operations
+            kernel = np.ones((3, 3), np.uint8)
+            blue_mask = cv2.morphologyEx(blue_mask, cv2.MORPH_OPEN, kernel)
+            blue_mask = cv2.morphologyEx(blue_mask, cv2.MORPH_CLOSE, kernel)
 
             # Count blue pixels
-            blue_pixel_count = np.count_nonzero(blue_mask)
+            blue_pixel_count = cv2.countNonZero(blue_mask)
 
-            # Track elapsed seconds
+            # Track time
             elapsed_seconds = int(time.time() - start_time)
-
-            # Only log data once per second
             if elapsed_seconds > last_logged_time:
-                last_logged_time = elapsed_seconds  # Update last log time
+                last_logged_time = elapsed_seconds
                 blue_pixel_counts.append((elapsed_seconds, blue_pixel_count))
                 print(f"Time: {elapsed_seconds}s, Blue Pixels: {blue_pixel_count}")
 
-            # Check if the reaction is still blue
-            if blue_pixel_count >= blue_pixel_threshold:
-                below_threshold_counter = 0  # Reset counter if blue is detected
+            # Below-threshold handling
+            if blue_pixel_count > 0:
+                below_threshold_counter = 0
             else:
                 below_threshold_counter += 1
                 print(f"Blue below threshold for {below_threshold_counter} seconds.")
-
-                # Stop the loop if blue is gone for the set duration
                 if below_threshold_counter >= blue_pixel_below_threshold_duration:
                     print("The reaction is no longer blue. Stopping.")
                     break
 
-            # Draw ROI on frame
+            # Draw ROI and display
             cv2.rectangle(frame, (roi_x, roi_y), (roi_x + roi_w, roi_y + roi_h), (0, 255, 0), 2)
             cv2.imshow("test", frame)
 
-            # Convert mask to displayable format
-            blue_mask_display = cv2.merge([blue_mask.astype(np.uint8) * 255] * 3)
+            # Show the blue mask
+            blue_mask_display = cv2.merge([blue_mask] * 3)
             cv2.imshow("Blue Mask", blue_mask_display)
 
     except Exception as e:
         print(f"Error occurred: {e}")
 
     finally:
-        # Release webcam
         cam.release()
         cv2.destroyAllWindows()
 
-        # Save CSV file
+        # Save data
         try:
             with open(CSV_FILE_PATH, mode='w', newline='') as file:
                 writer = csv.writer(file)
@@ -225,12 +235,13 @@ def main():
         except Exception as e:
             print(f"Error while saving CSV file: {e}")
 
-        # Check if enough blue was detected
+        # Final decision
         if sum(count for _, count in blue_pixel_counts) >= reaction_threshold:
             print("Sample vial is blue")
         else:
             print("Sample vial did not reach the blue threshold")
 
+            
     time.sleep(2)
     move_robot(robot, ROBOT_POSITIONS["above_home_holder"])
     print("Moved above home holder")
