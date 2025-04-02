@@ -17,28 +17,15 @@ import matplotlib.pyplot as plt
 from scipy.optimize import curve_fit
 import os
 
-from kinetics import process_and_plot_absorbance
-
-# class RobotClass:
-#     def __init__(self,args):
-#         self.ROBOT_POSITIONS = ...
-#         self._angle_deg : int = 100
-#         self.args = args
-#         self.rads = self.degreestorad(self, self._angle_deg)
-        
-#     def degreestorads(self, angle):
-#         print(f"hi {angle}")
-#         return 10
-    
-# robot = RobotClass(10)
+from Kinetics import process_and_plot_absorbance
 
 # Robot position constants
 ROBOT_POSITIONS = {
     "home": [1.9598381519317627, -1.8197394810118617, 2.0655067602740687, -0.2610810560039063, 1.9489684104919434, 3.1007790565490723],
     "sample_vial": [1.8568476438522339, -1.0523559612086792, 2.228867832814352, -1.175378904943802, 1.8485941886901855, 3.121866464614868],
     "up_vertical": [1.8578236103057861, -1.447265812461712, 2.110725227986471, -0.6615637105754395, 1.847927212715149, 3.124692440032959],
-    "above_stirrer": [1.1681103706359863, -2.01121248821401, 2.5829289595233362, -0.5724046987346192, 1.1567866802215576, 3.1245429515838623],
-    "in_stirrer": [1.1671242713928223, -1.794520994225973, 2.697186533604757, -0.9027928870967408, 1.1570861339569092, 3.123086452484131],
+    "above_stirrer": [1.168654441833496, -2.158050676385397, 2.3632450739489954, -0.20627863824877934, 1.1556280851364136, 3.1256730556488037],
+    "in_stirrer": [1.1673400402069092, -1.8471819363036097, 2.67733341852297, -0.8302822870067139, 1.157050371170044, 3.12343168258667],
     "gripper_vertical": [1.418738842010498, -1.2759456199458619, 1.2870314756976526, 1.557830734843872, 1.5609979629516602, 2.964608669281006],
     "gripper_down": [1.412574291229248, -1.2245715421489258, 1.5707538763629358, 1.2227379518696289, 1.5618265867233276, 2.960045576095581],
     "just_above_stirrer": [1.4119385480880737, -1.232708917265274, 1.5361388365374964, 1.2655228811451416, 1.5617036819458008, 2.9591991901397705],
@@ -107,7 +94,8 @@ def main():
     time.sleep(1)
     move_robot(robot, ROBOT_POSITIONS["above_stirrer"])
     print("Moved back above stirrer")
-  # Stirring process (30 seconds) update this please when it comes to it
+    ######## Stirring process (30 seconds) update this please when it comes to it
+    time.sleep(30)
 
     move_robot(robot, ROBOT_POSITIONS["gripper_down"])
     operate_gripper(gripper, 140)  # Close the gripper to pick up sample
@@ -242,10 +230,6 @@ def main():
         else:
             print("Sample vial did not reach the blue threshold")
             
-            
-    time.sleep(2)
-    move_robot(robot, ROBOT_POSITIONS["above_home_holder"])
-    print("Moved above home holder")
 
     time.sleep(1)
     move_robot(robot, ROBOT_POSITIONS["readjustment"])
@@ -259,18 +243,11 @@ def main():
     operate_gripper(gripper, 0)  # Open the gripper to finish
 
 
-# Call the function with the file path and other parameters
-df_result = process_and_plot_absorbance(CSV_FILE_PATH, reference_time=3.0, show_plot=True)
+    # Call the function with the file path and other parameters
+    df_result = process_and_plot_absorbance(CSV_FILE_PATH)
 
-# print the resulting DataFrame to see the processed data
-print(df_result)
-
-
+    # print the resulting DataFrame to see the processed data
+    print(df_result)
 
 if __name__ == "__main__":
     main()
-
-
-
-
-
