@@ -19,7 +19,7 @@ The resazurin test demonstrates the reversible oxidation and reduction of the re
 
 ![image](https://github.com/user-attachments/assets/29d70cac-7c86-445c-af21-293f21e1efc4)
 
-Adapted by Uzarski _et al._ (J. S. Uzarski, M. D. DiVito, J. A. Wertheim, W. M. Miller, _Biomaterials_, 2017, **129**, 163-175).
+Adapted from Uzarski _et al._ (J. S. Uzarski, M. D. DiVito, J. A. Wertheim, W. M. Miller, _Biomaterials_, 2017, **129**, 163-175).
 
 ### "Chemical Traffic Light" Experiment
 
@@ -27,7 +27,7 @@ The "Chemical Traffic Light" experiment is a redox reaction that demonstrates co
 
 ![image](https://github.com/user-attachments/assets/f2aa221a-4378-4d13-a24b-a467d02ccecd)
 
-S. C. Habibi, B. K. Bloom, A. E. Sjoblom, O. W. Schmitz, A. Edwards, Z. R. Croasmun-Adams, R. J. DeLuca, J. S. Smith, K. L. Kuntz, _J. Chem. Edu._, 2024, **101**, 2505-2512.
+Adapted from Habibi _et al._ (S. C. Habibi, B. K. Bloom, A. E. Sjoblom, O. W. Schmitz, A. Edwards, Z. R. Croasmun-Adams, R. J. DeLuca, J. S. Smith, K. L. Kuntz, _J. Chem. Edu._, 2024, **101**, 2505-2512.).
 
 ## Prerequisites
 
