@@ -9,9 +9,15 @@ This project involves automating the Blue Bottle Experiment using a UR5e robotic
 
 ### The Blue Bottle Experiment
 
-The Blue Bottle Experiment demonstrates the reversible oxidation and reduction of methylene blue. When shaken, the solution mixes with oxygen, oxidising methylene blue to its blue form. Over time, the dissolved oxygen is consumed by glucose in the reaction, and methylene blue is reduced to its colourless form.
+The Blue Bottle Experiment demonstrates the reversible oxidation and reduction of methylene blue. When shaken, the solution mixes with oxygen, oxidising methylene blue to its blue form. Over time, the dissolved oxygen is consumed by glucose in the reaction, and methylene blue is reduced to its colourless (leuco) form.
 
 ![image](https://github.com/user-attachments/assets/f0d46fd7-f9c2-44cb-8bfc-536ab88977f2)
+
+### Resazurin Test
+
+The resazurin test demonstrates the reversible oxidation and reduction of the redox indicator resazurin. In its oxidised form, resazurin is blue. In its reduced form, resofurin is pink. This reaction has applications in the alamarBlue™ assay, which is a cell viability assay that measures cell proliferation and cytotoxicity using the metabolic activity of living cells, converting resazurin to resorufin.
+
+Adapted by Uzarski _et al._ (J. S. Uzarski, M. D. DiVito, J. A. Wertheim, W. M. Miller, _Biomaterials_, 2017, **129**, 163-175).
 
 ## Prerequisites
 
