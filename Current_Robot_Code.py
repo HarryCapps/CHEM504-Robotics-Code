@@ -17,6 +17,7 @@ import matplotlib.pyplot as plt
 from scipy.optimize import curve_fit
 import os
 
+from kinetics import process_and_plot_absorbance
 
 # class RobotClass:
 #     def __init__(self,args):
@@ -240,7 +241,7 @@ def main():
             print("Sample vial is blue")
         else:
             print("Sample vial did not reach the blue threshold")
-
+            
             
     time.sleep(2)
     move_robot(robot, ROBOT_POSITIONS["above_home_holder"])
@@ -257,6 +258,7 @@ def main():
     # Open the gripper after completion
     operate_gripper(gripper, 0)  # Open the gripper to finish
     
+ 
 def calculate_absorbance(blue_pixel_count):
     """
     Calculate absorbance based on the initial blue intensity and the current intensity.
@@ -283,6 +285,9 @@ def calculate_absorbance(blue_pixel_count):
         print(f"Time: {time}s, Blue Intensity: {current_intensity}, Absorbance: {absorbance:.4f}")
 
     return absorbance_values
+
+#calls on this function to calculate the kinetics          
+process_and_plot_absorbance
 
 # # Save CSV file with absorbance data
 # try:
