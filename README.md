@@ -1,5 +1,5 @@
 # CHEM504-Robotics-Code
-This GitHub repository contains the code used in a research project for CHEM504 - Robotics and Automation in Chemistry at the University of Liverpool.
+This GitHub repository contains the code used in a research project for _CHEM504 - Robotics and Automation in Chemistry_ at the University of Liverpool.
 
 ## Description
 
