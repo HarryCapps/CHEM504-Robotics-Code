@@ -21,6 +21,12 @@ The resazurin test demonstrates the reversible oxidation and reduction of the re
 
 Adapted from Uzarski _et al._ (J. S. Uzarski, M. D. DiVito, J. A. Wertheim, W. M. Miller, _Biomaterials_, 2017, **129**, 163-175).
 
+#### Kinetics
+
+The reaction follows first-order kinetics with respect to hydroxide ions, methylene blue, and glucose, while it is zero-order with respect to oxygen. The rate of reaction can be determined by measuring the time it takes for a solution of known concentrations to lose its colour.
+
+To determine the activation energy, an Arrhenius plot can be used. This involves plotting the natural logarithm of the decolouration time against the inverse of the absolute temperature. As explained by Campbell, this approach is valid because the rate-determining step does not depend on the oxygen concentration. Therefore, the time taken for the solution to turn colourless is directly related to the rate constnat. This relationship yields a straight line in the Arrhenius plot.
+
 ### "Chemical Traffic Light" Experiment
 
 The "Chemical Traffic Light" experiment is a redox reaction that demonstrates colour changes based on oxidation states. A solution containing indigo carmine, glucose (a reducing agent), and sodium hydroxide or potassium hydroxide in water changes colour when shaken and left to rest. When oxygen is introduced by shaking, indigo carmine is oxidised, turning the solution red. As the oxygen is consumed, it transitions through yellow (partially reduced) to green (fully reduced) when left undisturbed. This reversible cycle, driven by oxidation from air and reduction by glucose, mimics a traffic light sequence and illustrates redox chemistry and reaction kinetics.
