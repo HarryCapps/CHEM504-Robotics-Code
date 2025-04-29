@@ -27,6 +27,8 @@ The reaction follows first-order kinetics with respect to hydroxide ions, methyl
 
 To determine the activation energy, an Arrhenius plot can be used. This involves plotting the natural logarithm of the decolouration time against the inverse of the absolute temperature. As explained by Campbell, this approach is valid because the rate-determining step does not depend on the oxygen concentration. Therefore, the time taken for the solution to turn colourless is directly related to the rate constnat. This relationship yields a straight line in the Arrhenius plot.
 
+J. A. Campbell, _J. Chem. Educ._, 1963, **40**, 578.
+
 ### "Chemical Traffic Light" Experiment
 
 The "Chemical Traffic Light" experiment is a redox reaction that demonstrates colour changes based on oxidation states. A solution containing indigo carmine, glucose (a reducing agent), and sodium hydroxide or potassium hydroxide in water changes colour when shaken and left to rest. When oxygen is introduced by shaking, indigo carmine is oxidised, turning the solution red. As the oxygen is consumed, it transitions through yellow (partially reduced) to green (fully reduced) when left undisturbed. This reversible cycle, driven by oxidation from air and reduction by glucose, mimics a traffic light sequence and illustrates redox chemistry and reaction kinetics.
