@@ -13,14 +13,6 @@ The Blue Bottle Experiment demonstrates the reversible oxidation and reduction o
 
 ![image](https://github.com/user-attachments/assets/f0d46fd7-f9c2-44cb-8bfc-536ab88977f2)
 
-### Resazurin Test
-
-The resazurin test demonstrates the reversible oxidation and reduction of the redox indicator resazurin. In its oxidised form, resazurin is blue. In its reduced form, resofurin is pink. This reaction has applications in the alamarBlue™ assay, which is a cell viability assay that measures cell proliferation and cytotoxicity using the metabolic activity of living cells, converting resazurin to resorufin.
-
-![image](https://github.com/user-attachments/assets/29d70cac-7c86-445c-af21-293f21e1efc4)
-
-Adapted from Uzarski _et al._ (J. S. Uzarski, M. D. DiVito, J. A. Wertheim, W. M. Miller, _Biomaterials_, 2017, **129**, 163-175).
-
 #### Kinetics
 
 The reaction follows first-order kinetics with respect to hydroxide ions, methylene blue, and glucose, while it is zero-order with respect to oxygen. The rate of reaction can be determined by measuring the time it takes for a solution of known concentrations to lose its colour.
@@ -28,6 +20,14 @@ The reaction follows first-order kinetics with respect to hydroxide ions, methyl
 To determine the activation energy, an Arrhenius plot can be used. This involves plotting the natural logarithm of the decolouration time against the inverse of the absolute temperature. As explained by Campbell, this approach is valid because the rate-determining step does not depend on the oxygen concentration. Therefore, the time taken for the solution to turn colourless is directly related to the rate constnat. This relationship yields a straight line in the Arrhenius plot.
 
 J. A. Campbell, _J. Chem. Educ._, 1963, **40**, 578.
+
+### Resazurin Test
+
+The resazurin test demonstrates the reversible oxidation and reduction of the redox indicator resazurin. In its oxidised form, resazurin is blue. In its reduced form, resofurin is pink. This reaction has applications in the alamarBlue™ assay, which is a cell viability assay that measures cell proliferation and cytotoxicity using the metabolic activity of living cells, converting resazurin to resorufin.
+
+![image](https://github.com/user-attachments/assets/29d70cac-7c86-445c-af21-293f21e1efc4)
+
+Adapted from Uzarski _et al._ (J. S. Uzarski, M. D. DiVito, J. A. Wertheim, W. M. Miller, _Biomaterials_, 2017, **129**, 163-175).
 
 ### "Chemical Traffic Light" Experiment
 
