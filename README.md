@@ -47,9 +47,10 @@ The following software is required to run the code and acquire the appropriate d
 
 The following pieces of equipment are also required:
 
-- UR5e
-- HD Web camera
-- Hotplate stirrer
+- UR5e robotic arm
+- Robotiq Hand-E adaptive gripper
+- HD Web camera (Logitech C920 HD Pro Webcam)
+- Hotplate stirrer (Heidolph Instruments Hei-PLATE Mix 'n' Heat Core+)
 - Sample vial(s)
 - 20 mm magnetic stirrer bar(s)
 - White background
