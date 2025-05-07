@@ -55,9 +55,6 @@ The following pieces of equipment are also required:
 - 20 mm magnetic stirrer bar(s)
 - White background
 
-## Installation
-
-
 ## Usage
 
 Below is a set of instructions for collecting data using the hardware listed before and the code provided.
